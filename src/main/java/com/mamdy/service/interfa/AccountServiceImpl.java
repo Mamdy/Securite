@@ -22,23 +22,29 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public AppUser saveUser(String username, String password, String confirmedPassword) {
+    public AppUser saveUser(String username, String password, String confirmedPassword, String name, String phone, String adress) {
         //verifier dabord si le user existe deja:
         AppUser user = userDaoRepository.findByUsername(username);
-        if(user!=null) throw new RuntimeException("user already existe");
-        if(!password.equals(confirmedPassword)) throw  new RuntimeException("Password not match, Please confirm your password");
+        if (user != null) throw new RuntimeException("user already existe");
+        if (!password.equals(confirmedPassword))
+            throw new RuntimeException("Password not match, Please confirm your password");
 
 
         AppUser appUser = new AppUser();
         appUser.setUsername(username);
         appUser.setPassword(bCryptPasswordEncoder.encode(password));
+        appUser.setName(name);
+        appUser.setPhone(phone);
+        appUser.setAddress(adress);
         appUser.setActived(true);
-        userDaoRepository.save(appUser);
-        if(appUser.getUsername()=="admin") {
-            addRoleToUser(username,"ADMIN");
-        }
+        appUser = userDaoRepository.save(appUser);
+        if (appUser.getUsername() == "admin") {
+            addRoleToUser(username, "ADMIN");
 
-        addRoleToUser(username,"USER");
+        } else {
+            addRoleToUser(username, "CUSTOMER");
+        }
+        appUser = userDaoRepository.save(appUser);
         return appUser;
     }
 
@@ -57,6 +63,8 @@ public class AccountServiceImpl implements AccountService {
     public void addRoleToUser(String username, String rolename) {
         AppUser user = userDaoRepository.findByUsername(username);
         AppRole role = rolesDaoRepositrory.findByRoleName(rolename);
+        user.setRole(role.getRoleName());
+        ;
         user.getRoles().add(role);
 
     }
