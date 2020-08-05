@@ -1,10 +1,11 @@
 package com.mamdy.web;
 
 import com.mamdy.entities.AppUser;
+import com.mamdy.form.UserCredantialForm;
+import com.mamdy.form.UserRegisterForm;
 import com.mamdy.request.JwtResponse;
 import com.mamdy.security.JwtProvider;
 import com.mamdy.service.interfa.AccountService;
-import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,25 +36,27 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    AppUser register(@RequestBody UserFom userFom) {
-        return accountService.saveUser(userFom.getUsername(), userFom.getPassword(), userFom.getConfirmedPassword(), userFom.getName(), userFom.getPhone(), userFom.getAddress());
+    AppUser register(@RequestBody UserRegisterForm userFom) {
+        return accountService.saveUser(userFom.getEmail(), userFom.getPassword(), userFom.getConfirmedPassword(), userFom.getFirstName(), userFom.getLastName(), userFom.getPhone(), userFom.getAddress());
+
 
     }
 
     //    @PostMapping("/login")
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity<JwtResponse> login(@RequestBody UserFom userFom) {
+    public ResponseEntity<JwtResponse> login(@RequestBody UserCredantialForm credential) {
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userFom.getUsername(), userFom.getPassword()));
+                    new UsernamePasswordAuthenticationToken(credential.getEmail(), credential.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String jwt = jwtProvider.generate(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            AppUser appUser = accountService.loadUserByUsername(userDetails.getUsername());
-            return ResponseEntity.ok(new JwtResponse(jwt, appUser.getEmail(), appUser.getName(), appUser.getRole()));
+            AppUser user = accountService.loadUserByEmail(userDetails.getUsername());
+            String fullName = user.getFirstName() + " " + user.getLastName();
+            return ResponseEntity.ok(new JwtResponse(jwt, user));
 
 
         } catch (AuthenticationException e) {
@@ -65,12 +68,3 @@ public class UserController {
 
 }
 
-@Data
-class UserFom {
-    private String username;
-    private String password;
-    private String confirmedPassword;
-    private String name;
-    private String phone;
-    private String address;
-}

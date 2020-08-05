@@ -22,50 +22,54 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public AppUser saveUser(String username, String password, String confirmedPassword, String name, String phone, String adress) {
+    public AppUser saveUser(final String email, final String password, final String confirmedPassword, final String firstName, final String lastName, final String phone, final String address) {
         //verifier dabord si le user existe deja:
-        AppUser user = userDaoRepository.findByUsername(username);
+        AppUser user = userDaoRepository.findByEmail(email);
         if (user != null) throw new RuntimeException("user already existe");
         if (!password.equals(confirmedPassword))
             throw new RuntimeException("Password not match, Please confirm your password");
 
 
         AppUser appUser = new AppUser();
-        appUser.setUsername(username);
+        AppRole role = rolesDaoRepositrory.findByRoleName(appUser.getRole());
+        appUser.getRoles().add(role);
+
+        //ajouter le role adim à ce utilisateurs
+
+        if ("balphamamoudou2013@gmail.com".equals(email)) {
+            addRoleToUser(appUser, "ADMIN");
+
+        }
+
+        appUser.setEmail(email);
         appUser.setPassword(bCryptPasswordEncoder.encode(password));
-        appUser.setName(name);
+        appUser.setFirstName(firstName);
+        appUser.setLastName(lastName);
         appUser.setPhone(phone);
-        appUser.setAddress(adress);
+        appUser.setAddress(address);
         appUser.setActived(true);
         appUser = userDaoRepository.save(appUser);
-        if (appUser.getUsername() == "admin") {
-            addRoleToUser(username, "ADMIN");
 
-        } else {
-            addRoleToUser(username, "CUSTOMER");
-        }
-        appUser = userDaoRepository.save(appUser);
         return appUser;
     }
 
     @Override
     public AppRole saveRole(AppRole role) {
-        return  rolesDaoRepositrory.save(role);
+        return rolesDaoRepositrory.save(role);
     }
 
     @Override
-    public AppUser loadUserByUsername(String username) {
+    public AppUser loadUserByEmail(final String email) {
 
-        return userDaoRepository.findByUsername(username);
+        return userDaoRepository.findByEmail(email);
     }
 
-    @Override
-    public void addRoleToUser(String username, String rolename) {
-        AppUser user = userDaoRepository.findByUsername(username);
+
+    private void addRoleToUser(final AppUser user, final String rolename) {
+
         AppRole role = rolesDaoRepositrory.findByRoleName(rolename);
-        user.setRole(role.getRoleName());
-        ;
         user.getRoles().add(role);
+        user.setRole(role.getRoleName());
 
     }
 }

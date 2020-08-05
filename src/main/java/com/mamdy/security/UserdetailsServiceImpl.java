@@ -19,15 +19,15 @@ public class UserdetailsServiceImpl implements UserDetailsService {
     @Autowired
     private AccountService accountService;
     @Override
-    public UserDetails loadUserByUsername(String usernmame) throws UsernameNotFoundException {
-        AppUser user = accountService.loadUserByUsername(usernmame);
-        if(user==null) throw new UsernameNotFoundException("user not found");
+    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        AppUser user = accountService.loadUserByEmail(email);
+        if (user == null) throw new UsernameNotFoundException("user not found");
 
-        Collection<GrantedAuthority> authorities=new ArrayList<>();
-        user.getRoles().forEach(r->{
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(r -> {
             authorities.add(new SimpleGrantedAuthority(user.getRole()));
         });
 
-        return new User(user.getUsername(),user.getPassword(),authorities);
+        return new User(user.getEmail(), user.getPassword(), authorities);
     }
 }

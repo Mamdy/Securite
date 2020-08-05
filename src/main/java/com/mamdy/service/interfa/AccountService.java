@@ -3,13 +3,11 @@ package com.mamdy.service.interfa;
 import com.mamdy.entities.AppRole;
 import com.mamdy.entities.AppUser;
 
-public interface AccountService
-{
-    public AppUser saveUser(String username, String password, String confirmedPassword, String name, String phone, String adress);
+public interface AccountService {
+    AppUser saveUser(final String email, final String password, final String confirmedPassword, final String firstName, final String lastName, final String phone, final String address);
 
-    public AppRole saveRole(AppRole role);
-    public AppUser loadUserByUsername(String username);
-    public void addRoleToUser(String username, String rolename );
+    AppRole saveRole(AppRole role);
 
+    AppUser loadUserByEmail(final String email);
 
 }

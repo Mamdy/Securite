@@ -6,5 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface UserDaoRepository extends JpaRepository<AppUser, Long> {
-    AppUser findByUsername(String username);
+    AppUser findByEmail(final String email);
 }
