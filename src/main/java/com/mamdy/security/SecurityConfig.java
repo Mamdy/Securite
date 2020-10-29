@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS.STATELESS);
         //pas besoins de s'authentifier pour se loger ou s'enregistrer
-        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**", "/api/test/**").permitAll();
 //        http.authorizeRequests().antMatchers("/cart/**").hasAuthority("USER");
 //        http.authorizeRequests().antMatchers("/profile/**").authenticated();
         http.authorizeRequests().antMatchers("/appUsers/**", "/appRoles/**").hasAuthority("ADMIN");
