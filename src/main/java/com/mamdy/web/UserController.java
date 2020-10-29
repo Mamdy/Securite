@@ -32,7 +32,6 @@ public class UserController {
         this.jwtProvider = jwtProvider;
         this.accountService = accountService;
 
-
     }
 
     @PostMapping("/register")
