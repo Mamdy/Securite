@@ -40,6 +40,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //2eme methode, on veut utiliser jwt json web token aulieu d'une authentification par session(STATELESS)
         //ça veut dire spring ne garde pas en memoire la session, mais le token
 
+        /*Cette configuration indique à Spring de
+         rediriger toutes les requêtes HTTP simples vers la même URL en utilisant HTTPS si l'entête - X-Forwarded-Proto
+          est présent. Heroku définit l'en- X-Forwarded-Prototête pour vous, ce qui signifie que la demande sera
+          redirigée via le routeur Heroku où SSL est terminé.
+         */
+        
+        http.requiresChannel()
+                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+                .requiresSecure();
+
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS.STATELESS);
         //pas besoins de s'authentifier pour se loger ou s'enregistrer

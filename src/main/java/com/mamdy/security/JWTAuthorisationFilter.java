@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,17 +29,24 @@ public class JWTAuthorisationFilter extends OncePerRequestFilter {
     private JwtProvider jwtProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
         //authoriser les requête provenant d'un domaine x=> vers mon domaine
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, authorization");
         response.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials, authorization");
         response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
+        response.setContentType(String.valueOf(MediaType.APPLICATION_JSON));
         if (request.getMethod().equals("OPTIONS") || (request.getMethod().equals("GET") && request.getRequestURI().equals("/api/test")) ) {
             response.setStatus(HttpServletResponse.SC_OK);
+            filterChain.doFilter(request, response);
+            return;
+
         } else if (request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/register")) {
             filterChain.doFilter(request, response);
+            return;
 
         } else {
             String jwtToken = getToken(request);
