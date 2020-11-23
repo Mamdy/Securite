@@ -17,7 +17,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,9 +38,9 @@ public class JWTAuthorisationFilter extends OncePerRequestFilter {
         response.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials, authorization");
         response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
         response.setContentType(String.valueOf(MediaType.APPLICATION_JSON));
-        if (request.getMethod().equals("OPTIONS") || (request.getMethod().equals("GET") && request.getRequestURI().equals("/api/test")) ) {
+        if (request.getMethod().equals("OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
-            filterChain.doFilter(request, response);
+            //filterChain.doFilter(request, response);
             return;
 
         } else if (request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/register")) {
