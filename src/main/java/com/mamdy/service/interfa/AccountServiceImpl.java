@@ -4,6 +4,7 @@ import com.mamdy.dao.RolesDaoRepositrory;
 import com.mamdy.dao.UserDaoRepository;
 import com.mamdy.entities.AppRole;
 import com.mamdy.entities.AppUser;
+import com.mamdy.form.UserResetPasswordForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,16 @@ public class AccountServiceImpl implements AccountService {
         appUser = userDaoRepository.save(appUser);
 
         return appUser;
+    }
+
+    @Override
+    public AppUser updateUserPassword(AppUser user, UserResetPasswordForm userResetPasswordFormValue){
+        if (!userResetPasswordFormValue.getNewPassword().equals(userResetPasswordFormValue.getConfirmedPassword()))
+            throw new RuntimeException("Les mots de passe ne correspondent pas !,  Confirmez le mot de passe");
+
+        user.setPassword(bCryptPasswordEncoder.encode(userResetPasswordFormValue.getNewPassword()));
+        user = userDaoRepository.save(user);
+        return user;
     }
 
     @Override

@@ -38,12 +38,12 @@ public class JWTAuthorisationFilter extends OncePerRequestFilter {
         response.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials, authorization");
         response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
         response.setContentType(String.valueOf(MediaType.APPLICATION_JSON));
-        if (request.getMethod().equals("OPTIONS")) {
+        if (request.getMethod().equals("OPTIONS") || request.getMethod().equals("GET") ) {
             response.setStatus(HttpServletResponse.SC_OK);
-            //filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
             return;
 
-        } else if (request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/register")) {
+        } else if (request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/register") || request.getRequestURI().contains("/api/passwordReset")) {
             filterChain.doFilter(request, response);
             return;
 

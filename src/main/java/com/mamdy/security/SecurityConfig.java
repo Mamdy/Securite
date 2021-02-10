@@ -3,6 +3,7 @@ package com.mamdy.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -53,11 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS.STATELESS);
         //pas besoins de s'authentifier pour se loger ou s'enregistrer
-        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**", "/api/test/**").permitAll();
-//        http.authorizeRequests().antMatchers("/cart/**").hasAuthority("USER");
-//        http.authorizeRequests().antMatchers("/profile/**").authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/getUserByEmail/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.PATCH, "/api/passwordReset/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**", "/api/passwordReset/**", "/api/test/**").permitAll();
         http.authorizeRequests().antMatchers("/appUsers/**", "/appRoles/**").hasAuthority("ADMIN");
-        //http.authorizeRequests().antMatchers("/api/login/**").hasAnyAuthority("ADMIN","ROLE_CUSTOMER");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager()));
         http.addFilterBefore(new JWTAuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);
