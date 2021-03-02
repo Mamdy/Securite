@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class UpdatedUserForm {
-    private String civilite;
+    private Long id;
     private String email;
+    private String password;
+    private String civilite;
     private String lastName;
     private String firstName;
-    private String password;
-    private String confirmedPassword;
     private String phone;
     private String address;
     private String codePostal;

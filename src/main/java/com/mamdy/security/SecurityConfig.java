@@ -55,9 +55,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS.STATELESS);
         //pas besoins de s'authentifier pour se loger ou s'enregistrer
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/getUserByEmail/**").permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.PATCH, "/api/passwordReset/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**", "/api/passwordReset/**", "/api/test/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/profile/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/profile/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.PATCH, "/api/profile/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**", "/api/passwordReset/**", "/api/test/**","/api/profile/**").permitAll();
         http.authorizeRequests().antMatchers("/appUsers/**", "/appRoles/**").hasAuthority("ADMIN");
+        //http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/profileUpdate/**").hasAnyRole("ADMIN","CUSTOMER");
+       // http.authorizeRequests().antMatchers("/api/profile/**").hasAuthority("CUSTOMER");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager()));
         http.addFilterBefore(new JWTAuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);

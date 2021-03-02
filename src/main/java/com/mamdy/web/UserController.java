@@ -2,6 +2,7 @@ package com.mamdy.web;
 
 import com.mamdy.dao.UserDaoRepository;
 import com.mamdy.entities.AppUser;
+import com.mamdy.form.UpdatedUserForm;
 import com.mamdy.form.UserCredantialForm;
 import com.mamdy.form.UserRegisterForm;
 import com.mamdy.form.UserResetPasswordForm;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -34,25 +36,83 @@ public class UserController {
 
     private final UserDaoRepository userDaoRepository;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     UserController(final AuthenticationManager authenticationManager,
                    final JwtProvider jwtProvider,
                    final AccountService accountService,
-                   final UserDaoRepository userDaoRepository) {
+                   final UserDaoRepository userDaoRepository,
+                   final BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.accountService = accountService;
         this.userDaoRepository = userDaoRepository;
-
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @GetMapping("/getUserByEmail/{email}")
-    AppUser getUserByEmail(@PathVariable("email")  final String email) {
+    AppUser getUserByEmail(@PathVariable("email")final String email) {
         return  this.accountService.loadUserByEmail(email);
+
+    }
+
+    @GetMapping("/profile/{email}")
+    AppUser getUserEmail(@PathVariable("email")final String email) {
+        return  this.accountService.loadUserByEmail(email);
+    }
+
+    @GetMapping("/{id}")
+    AppUser gerUserById(@PathVariable("id")  final Long id) {
+        return  this.accountService.findUserById(id);
 
     }
     @PostMapping("/register")
     AppUser register(@RequestBody UserRegisterForm userFom) {
-        return accountService.saveUser(userFom.getEmail(), userFom.getPassword(), userFom.getConfirmedPassword(), userFom.getFirstName(), userFom.getLastName(), userFom.getPhone(), userFom.getAddress());
+        return accountService.saveUser(
+                userFom.getCivilite(),
+                userFom.getEmail(),
+                userFom.getPassword(),
+                userFom.getConfirmedPassword(),
+                userFom.getFirstName(),
+                userFom.getLastName(),
+                userFom.getPhone(),
+                userFom.getAddress(),
+                userFom.getCodePostal(),
+                userFom.getVille(),
+                userFom.getPays()
+        );
+
+
+    }
+
+    @PutMapping(value = "/profile/{id}")
+    public  AppUser updateUser(
+                                @RequestBody UpdatedUserForm newUser,
+                                @PathVariable("id") final Long id){
+        return  this.userDaoRepository.findById(id)
+                    .map(user->{
+                        user.setCivilite(newUser.getCivilite());
+                        user.setEmail(newUser.getEmail());
+                        if(!newUser.getPassword().isEmpty()){
+                            user.setPassword(this.bCryptPasswordEncoder.encode(newUser.getPassword()));
+                        }
+
+                        user.setFirstName(newUser.getFirstName());
+                        user.setLastName(newUser.getLastName());
+                        user.setPhone(newUser.getPhone());
+                        user.setAddress(newUser.getAddress());
+                        user.setCodePostal(newUser.getCodePostal());
+                        user.setVille(newUser.getVille());
+                        user.setPays(newUser.getPays());
+                        return userDaoRepository.save(user);
+                    })
+                .orElseGet(()->{
+                    newUser.setId(id);
+                    AppUser user = new AppUser();
+                    user.setId(newUser.getId());
+                    return userDaoRepository.save(user);
+                });
+
 
 
     }
@@ -71,7 +131,7 @@ public class UserController {
         return isUserPasswordReseated.get();
     }
 
-    //    @PostMapping("/login")
+
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<JwtResponse> login(@RequestBody UserCredantialForm credential) {
 
@@ -96,8 +156,6 @@ public class UserController {
 
     @GetMapping(path = { "/resetPassword/{email}" })
     public void sendResetPasswordLink(@PathVariable("email") final String email){
-
-
 
     }
 

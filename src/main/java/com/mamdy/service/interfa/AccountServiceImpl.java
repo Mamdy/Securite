@@ -23,7 +23,18 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public AppUser saveUser(final String email, final String password, final String confirmedPassword, final String firstName, final String lastName, final String phone, final String address) {
+    public AppUser saveUser(
+                final String civilite,
+                final String email,
+                final String password,
+                final String confirmedPassword,
+                final String firstName,
+                final String lastName,
+                final String phone,
+                final String address,
+                final String codePostal,
+                final String ville,
+                final String pays) {
         //verifier dabord si le user existe deja:
         AppUser user = userDaoRepository.findByEmail(email);
         if (user != null) throw new RuntimeException("user already existe");
@@ -49,6 +60,10 @@ public class AccountServiceImpl implements AccountService {
         appUser.setPhone(phone);
         appUser.setAddress(address);
         appUser.setActived(true);
+        appUser.setCodePostal(codePostal);
+        appUser.setCivilite(civilite);
+        appUser.setVille(ville);
+        appUser.setPays(pays);
         appUser = userDaoRepository.save(appUser);
 
         return appUser;
@@ -65,6 +80,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AppUser updateUser(AppUser user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return userDaoRepository.save(user);
+    }
+
+    @Override
     public AppRole saveRole(AppRole role) {
         return rolesDaoRepositrory.save(role);
     }
@@ -73,6 +94,11 @@ public class AccountServiceImpl implements AccountService {
     public AppUser loadUserByEmail(final String email) {
 
         return userDaoRepository.findByEmail(email);
+    }
+
+    @Override
+    public AppUser findUserById(Long id) {
+        return userDaoRepository.getOne(id);
     }
 
 

@@ -43,7 +43,7 @@ public class JWTAuthorisationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
 
-        } else if (request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/register") || request.getRequestURI().contains("/api/passwordReset")) {
+        } else if (request.getRequestURI().equals("/api/login") || request.getRequestURI().equals("/api/register") || request.getRequestURI().contains("/api/passwordReset") || request.getRequestURI().contains("/api/profile") || request.getRequestURI().contains("/api/profileUpdate")) {
             filterChain.doFilter(request, response);
             return;
 

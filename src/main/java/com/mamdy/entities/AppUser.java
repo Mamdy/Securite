@@ -22,17 +22,21 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
+    @NotEmpty
+    private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(min = 3, message = "Length must be more than 3")
     private String password;
     private boolean actived;
-    @Column(unique = true)
-    @NotEmpty
-    private String email;
+    private String civilite;
     private String firstName;
     private String lastName;
     private String phone;
     private String address;
+    private String codePostal;
+    private String ville;
+    private String pays;
 
     @NotEmpty
     private String role = "CUSTOMER";

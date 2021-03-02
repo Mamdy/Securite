@@ -29,7 +29,18 @@ public class SecurityServiceApplication {
             accountService.saveRole(new AppRole(null, "ADMIN"));
             userDaoRepository.deleteAll();
             Stream.of("balphamamoudou@yahoo.fr", "ismatbarry@yahoo.fr", "balphamamoudou2013@gmail.com", "alpha.barry@gfi.fr").forEach(email -> {
-                accountService.saveUser(email, "1234", "1234", "ALpha" + RandomString.make(2), "Barry" + RandomString.make(2), "0666383403", "04 allee pauline isabelle utiles, 44200, Nantes");
+                accountService.saveUser(
+                                "Mr",
+                                email,
+                            "1234",
+                        "1234",
+                        "ALpha" + RandomString.make(2),
+                        "Barry" + RandomString.make(2),
+                        "0666383403",
+                        "04 allee pauline isabelle utiles",
+                        "44200",
+                        "Nantes",
+                        "France");
             });
         };
 
