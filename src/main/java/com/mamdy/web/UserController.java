@@ -153,11 +153,7 @@ public class UserController {
         }
         //return  accountService.saveUser(userFom.getUsername(),userFom.getPassword(), userFom.getConfirmedPassword(),userFom.getName(),userFom.getPhone(),userFom.getAddress());
     }
-
-    @GetMapping(path = { "/resetPassword/{email}" })
-    public void sendResetPasswordLink(@PathVariable("email") final String email){
-
-    }
+    
 
 }
 
