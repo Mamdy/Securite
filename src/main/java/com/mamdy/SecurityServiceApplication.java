@@ -32,8 +32,8 @@ public class SecurityServiceApplication {
                 accountService.saveUser(
                                 "Mr",
                                 email,
-                            "1234",
-                        "1234",
+                            "123456789",
+                        "123456789",
                         "ALpha" + RandomString.make(2),
                         "Barry" + RandomString.make(2),
                         "0666383403",
