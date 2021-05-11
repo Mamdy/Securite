@@ -144,14 +144,13 @@ public class UserController {
             String jwt = jwtProvider.generate(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             AppUser user = accountService.loadUserByEmail(userDetails.getUsername());
-            String fullName = user.getFirstName() + " " + user.getLastName();
             return ResponseEntity.ok(new JwtResponse(jwt, user));
 
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        //return  accountService.saveUser(userFom.getUsername(),userFom.getPassword(), userFom.getConfirmedPassword(),userFom.getName(),userFom.getPhone(),userFom.getAddress());
+
     }
 
 
