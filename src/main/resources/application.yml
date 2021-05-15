@@ -19,4 +19,4 @@ spring:
       ddl-auto: create
 
 server:
-  port: ${PORT:8082}
+  port: ${PORT:8088}
