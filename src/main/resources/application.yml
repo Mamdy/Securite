@@ -17,3 +17,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+
+server:
+  port: ${PORT:8082}
