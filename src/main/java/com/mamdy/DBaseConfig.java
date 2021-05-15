@@ -17,16 +17,12 @@ public class DBaseConfig {
     private String driverClassName;
 
 
-
-
-
-
     @Bean
     public DataSource dataSource(){
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
-        /*config.setUsername("b53ad8c1e12d5f");
-        config.setPassword("bd43bb8d");*/
+        config.setUsername("b53ad8c1e12d5f");
+        config.setPassword("bd43bb8d");
         config.setDriverClassName(driverClassName);
         return new HikariDataSource(config);
     }
