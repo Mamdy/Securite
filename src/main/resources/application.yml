@@ -1,11 +1,16 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-standalone:3306/db_users?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: mamdy
-    password: Al62892599
+    url: mysql://b53ad8c1e12d5f:bd43bb8d@us-cdbr-east-03.cleardb.com/heroku_cd4e60d7fed9e5a?reconnect=true
+    username: b53ad8c1e12d5f
+    password: bd43bb8d
     hikari:
       initialization-fail-timeout: 0
+      minimumIdle: 2
+      maximumPoolSize: 10
+      idleTimeout: 120000
+      connectionTimeout: 300000
+      leakDetectionThreshold: 300000
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: true
